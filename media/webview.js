@@ -2,6 +2,7 @@
   const vscode = acquireVsCodeApi();
 
   const filterInput = document.getElementById('filterInput');
+  const filterClearBtn = document.getElementById('filterClearBtn');
   const regexToggle = document.getElementById('regexToggle');
   const caseToggle = document.getElementById('caseToggle');
   const lineLimitInput = document.getElementById('lineLimitInput');
@@ -85,7 +86,12 @@
     return { html, matched };
   }
 
+  function updateFilterClearVisibility() {
+    filterClearBtn.classList.toggle('hidden', filterInput.value.length === 0);
+  }
+
   function render() {
+    updateFilterClearVisibility();
     const matcher = buildMatcher();
     let matchCount = 0;
     const htmlParts = [];
@@ -135,6 +141,12 @@
   filterInput.addEventListener('input', render);
   regexToggle.addEventListener('change', render);
   caseToggle.addEventListener('change', render);
+
+  filterClearBtn.addEventListener('click', () => {
+    filterInput.value = '';
+    filterInput.focus();
+    render();
+  });
 
   lineLimitInput.addEventListener('change', () => {
     vscode.postMessage({ type: 'setLineLimit', value: Number(lineLimitInput.value) });

@@ -8,13 +8,16 @@
 </head>
 <body>
   <div id="toolbar">
-    <input id="filterInput" type="text" placeholder="Filter (grep)... e.g. error, or /pattern/i for regex" />
+    <div id="filterWrap">
+      <input id="filterInput" type="text" placeholder="Filter (grep)... e.g. error, or /pattern/i for regex" />
+      <button id="filterClearBtn" class="filterClearBtn hidden" title="Clear filter text">✕</button>
+    </div>
     <label class="toggle" title="Treat filter as a regular expression"><input id="regexToggle" type="checkbox" /> .*</label>
     <label class="toggle" title="Case sensitive match"><input id="caseToggle" type="checkbox" /> Aa</label>
     <label class="limitLabel" title="Max lines kept in the rolling buffer">Lines:
       <input id="lineLimitInput" type="number" min="1" max="200000" value="__LINE_LIMIT__" />
     </label>
-    <button id="clearBtn" class="danger" title="Truncate the file on disk to 0 bytes (low-level, atomic)">Clear File</button>
+    <button id="clearBtn" class="danger" title="Truncate the file on disk to 0 bytes (low-level, atomic)">Wipe File Contents</button>
   </div>
   <div id="status">
     <span id="statusText">Loading…</span>

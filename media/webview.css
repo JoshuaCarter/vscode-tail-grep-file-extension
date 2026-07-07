@@ -19,14 +19,43 @@ html, body {
   flex-shrink: 0;
 }
 
+#filterWrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
 #filterInput {
   flex: 1;
   background: var(--vscode-input-background);
   color: var(--vscode-input-foreground);
   border: 1px solid var(--vscode-input-border, transparent);
   border-radius: 3px;
-  padding: 4px 6px;
+  padding: 4px 24px 4px 6px;
   font-family: var(--vscode-editor-font-family, monospace);
+}
+
+.filterClearBtn {
+  position: absolute;
+  right: 4px;
+  background: transparent;
+  color: var(--vscode-descriptionForeground);
+  border: none;
+  border-radius: 3px;
+  padding: 2px 5px;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.filterClearBtn:hover {
+  background: var(--vscode-toolbar-hoverBackground, var(--vscode-list-hoverBackground));
+  color: var(--vscode-editor-foreground);
+}
+
+.filterClearBtn.hidden {
+  display: none;
 }
 
 .toggle {

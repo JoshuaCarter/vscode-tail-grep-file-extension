@@ -3,7 +3,8 @@
 A read-only, `tail -f`-style viewer for VS Code / Cursor. Opens huge files by loading only
 the last *N* lines (default 2000) instead of the whole document, so large or fast-growing
 log files never cause editor slowdowns. Includes an inline grep-style filter bar and a
-safe, low-level "Clear File" command for wiping log files without risking corruption.
+safe, low-level "Wipe File Contents" command for clearing log files without risking
+corruption.
 
 ## Features
 
@@ -15,13 +16,14 @@ safe, low-level "Clear File" command for wiping log files without risking corrup
   lines drop off as new ones arrive).
 - **Grep-style filter bar** — type plain text for a literal substring match, or
   `/pattern/flags` for a full regular expression. Toggle regex mode (`.*`) and
-  case-sensitivity (`Aa`) independently. Matches are highlighted inline, and the filter
-  is re-applied live as new tailed lines stream in — effectively `tail -f file | grep
-  pattern` running under the hood, with the same line-limit cap.
+  case-sensitivity (`Aa`) independently. A small "✕" button appears on the right side of
+  the search box to instantly clear the filter text. Matches are highlighted inline, and
+  the filter is re-applied live as new tailed lines stream in — effectively `tail -f file
+  | grep pattern` running under the hood, with the same line-limit cap.
 - **Follow / jump-to-bottom** — auto-scrolls while you're at the bottom; scrolling up
   pauses auto-scroll and shows a "Jump to bottom ↓" button.
-- **Safe low-level Clear File** — truncates the file on disk to 0 bytes via a single
-  `ftruncate` syscall on the existing file handle (plus `fsync`), instead of a
+- **Safe low-level "Wipe File Contents"** — truncates the file on disk to 0 bytes via a
+  single `ftruncate` syscall on the existing file handle (plus `fsync`), instead of a
   read-modify-write or delete+recreate. This means a process still holding the file open
   for appending just keeps writing from the new (zero) end, with no window where the file
   is left partially written — the same technique used by tools like `logrotate
@@ -37,7 +39,8 @@ safe, low-level "Clear File" command for wiping log files without risking corrup
 2. Use the filter bar at the top to narrow down lines.
 3. Adjust the **Lines** box to change the rolling buffer size (raising it re-reads more
    history from disk; lowering it trims the in-memory buffer).
-4. Use **Clear File** to truncate the underlying file (with a confirmation prompt).
+4. Use **Wipe File Contents** to truncate the underlying file immediately (no
+   confirmation prompt — this is irreversible).
 
 ## Installation (local/unpacked)
 

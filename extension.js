@@ -114,7 +114,7 @@ class TailSession {
         await this.setLineLimit(msg.value);
         break;
       case 'clear':
-        await this.confirmAndClear();
+        await this.clearFile();
         break;
       case 'refresh':
         await this.loadInitial();
@@ -207,17 +207,6 @@ class TailSession {
     }
   }
 
-  async confirmAndClear() {
-    const choice = await vscode.window.showWarningMessage(
-      `Clear "${path.basename(this.filePath)}"? This truncates the file to 0 bytes on disk immediately and cannot be undone.`,
-      { modal: true },
-      'Clear File'
-    );
-    if (choice === 'Clear File') {
-      await this.clearFile();
-    }
-  }
-
   async clearFile() {
     try {
       // Low-level truncate-in-place: a single ftruncate syscall on the existing file handle/inode,
@@ -235,7 +224,7 @@ class TailSession {
       this.lines = [];
       this.partial = '';
       this.post({ type: 'update', lines: [] });
-      this.post({ type: 'info', message: 'File cleared (truncated to 0 bytes).' });
+      this.post({ type: 'info', message: 'File contents wiped (truncated to 0 bytes).' });
     } catch (err) {
       this.post({ type: 'error', message: `Failed to clear file: ${err.message}` });
     }
