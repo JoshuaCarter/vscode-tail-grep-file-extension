@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src __CSP_SOURCE__ 'unsafe-inline'; script-src 'nonce-__NONCE__';">
+<link rel="stylesheet" href="__CSS_URI__">
+<title>Tail + Grep Viewer</title>
+</head>
+<body>
+  <div id="toolbar">
+    <input id="filterInput" type="text" placeholder="Filter (grep)... e.g. error, or /pattern/i for regex" />
+    <label class="toggle" title="Treat filter as a regular expression"><input id="regexToggle" type="checkbox" /> .*</label>
+    <label class="toggle" title="Case sensitive match"><input id="caseToggle" type="checkbox" /> Aa</label>
+    <label class="limitLabel" title="Max lines kept in the rolling buffer">Lines:
+      <input id="lineLimitInput" type="number" min="1" max="200000" value="__LINE_LIMIT__" />
+    </label>
+    <button id="clearBtn" class="danger" title="Truncate the file on disk to 0 bytes (low-level, atomic)">Clear File</button>
+  </div>
+  <div id="status">
+    <span id="statusText">Loading…</span>
+    <button id="jumpBtn" class="hidden">Jump to bottom ↓</button>
+  </div>
+  <div id="scrollArea">
+    <pre id="content"></pre>
+  </div>
+  <script nonce="__NONCE__" src="__JS_URI__"></script>
+</body>
+</html>

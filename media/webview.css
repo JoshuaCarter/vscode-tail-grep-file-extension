@@ -1,0 +1,138 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--vscode-editor-background);
+  color: var(--vscode-editor-foreground);
+  font-family: var(--vscode-font-family);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--vscode-panel-border);
+  flex-shrink: 0;
+}
+
+#filterInput {
+  flex: 1;
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  border: 1px solid var(--vscode-input-border, transparent);
+  border-radius: 3px;
+  padding: 4px 6px;
+  font-family: var(--vscode-editor-font-family, monospace);
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  user-select: none;
+  padding: 3px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid var(--vscode-panel-border);
+}
+
+.toggle:has(input:checked) {
+  background: var(--vscode-inputOption-activeBackground, var(--vscode-button-background));
+  color: var(--vscode-inputOption-activeForeground, var(--vscode-button-foreground));
+  border-color: var(--vscode-focusBorder, transparent);
+}
+
+.toggle input {
+  margin: 0;
+}
+
+.limitLabel {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  color: var(--vscode-descriptionForeground);
+}
+
+#lineLimitInput {
+  width: 70px;
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  border: 1px solid var(--vscode-input-border, transparent);
+  border-radius: 3px;
+  padding: 3px;
+}
+
+button {
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  border: none;
+  border-radius: 3px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+button:hover {
+  background: var(--vscode-button-hoverBackground);
+}
+
+button.danger {
+  background: var(--vscode-errorForeground, #c53030);
+  color: white;
+}
+
+button.danger:hover {
+  filter: brightness(1.15);
+}
+
+#status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 10px;
+  font-size: 12px;
+  color: var(--vscode-descriptionForeground);
+  border-bottom: 1px solid var(--vscode-panel-border);
+  flex-shrink: 0;
+}
+
+#jumpBtn.hidden {
+  display: none;
+}
+
+#scrollArea {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  min-height: 0;
+}
+
+#content {
+  margin: 0;
+  padding: 6px 10px;
+  font-family: var(--vscode-editor-font-family, 'SF Mono', Consolas, monospace);
+  font-size: var(--vscode-editor-font-size, 13px);
+  white-space: pre;
+  line-height: 1.4;
+}
+
+.line {
+  display: block;
+}
+
+.line:hover {
+  background: var(--vscode-list-hoverBackground);
+}
+
+mark {
+  background: var(--vscode-editor-findMatchHighlightBackground, #ffd54f);
+  color: inherit;
+  border-radius: 2px;
+}
