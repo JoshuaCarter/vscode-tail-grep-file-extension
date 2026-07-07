@@ -48,6 +48,14 @@
     }
   });
 
+  function selectAllContent() {
+    const range = document.createRange();
+    range.selectNodeContents(content);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
   // Ctrl/Cmd+A anywhere in the panel selects only the visible log lines, instead of the
   // browser default of selecting the whole page (toolbar labels, buttons, status text).
   // The filter and line-limit text fields keep their native select-all-within-field behavior.
@@ -61,11 +69,12 @@
       return;
     }
     e.preventDefault();
-    const range = document.createRange();
-    range.selectNodeContents(content);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
+    e.stopPropagation();
+    selectAllContent();
+    // Electron/VS Code's native "Select All" menu accelerator can fire independently of
+    // this handler and override the selection above with a whole-page select. Re-apply
+    // on the next tick so ours wins even when that happens.
+    setTimeout(selectAllContent, 0);
   });
 
   // Restoring a persisted view (e.g. after a window reload/restart): re-apply the
