@@ -14,7 +14,32 @@
 
   let rawLines = [];
   let following = true;
+  let currentFilePath = null;
   const SCROLL_EPS = 24;
+
+  // Restoring a persisted view (e.g. after a window reload/restart): re-apply the
+  // last filter/toggle values before the first render. The file to tail and its line
+  // limit are read from this same state by the extension host's webview serializer.
+  const previousState = vscode.getState() || {};
+  if (typeof previousState.filterText === 'string') {
+    filterInput.value = previousState.filterText;
+  }
+  if (typeof previousState.useRegex === 'boolean') {
+    regexToggle.checked = previousState.useRegex;
+  }
+  if (typeof previousState.caseSensitive === 'boolean') {
+    caseToggle.checked = previousState.caseSensitive;
+  }
+
+  function persistState() {
+    vscode.setState({
+      filePath: currentFilePath,
+      lineLimit: Number(lineLimitInput.value) || undefined,
+      filterText: filterInput.value,
+      useRegex: regexToggle.checked,
+      caseSensitive: caseToggle.checked
+    });
+  }
 
   function escapeHtml(s) {
     return s.replace(/[&<>"']/g, (c) => ({
@@ -138,18 +163,29 @@
     scrollToBottom();
   });
 
-  filterInput.addEventListener('input', render);
-  regexToggle.addEventListener('change', render);
-  caseToggle.addEventListener('change', render);
+  filterInput.addEventListener('input', () => {
+    render();
+    persistState();
+  });
+  regexToggle.addEventListener('change', () => {
+    render();
+    persistState();
+  });
+  caseToggle.addEventListener('change', () => {
+    render();
+    persistState();
+  });
 
   filterClearBtn.addEventListener('click', () => {
     filterInput.value = '';
     filterInput.focus();
     render();
+    persistState();
   });
 
   lineLimitInput.addEventListener('change', () => {
     vscode.postMessage({ type: 'setLineLimit', value: Number(lineLimitInput.value) });
+    persistState();
   });
 
   clearBtn.addEventListener('click', () => {
@@ -160,10 +196,12 @@
     const msg = event.data;
     switch (msg.type) {
       case 'init':
+        currentFilePath = msg.filePath;
         rawLines = msg.lines;
         lineLimitInput.value = msg.lineLimit;
         following = true;
         render();
+        persistState();
         break;
       case 'update':
         rawLines = msg.lines;

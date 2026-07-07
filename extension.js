@@ -13,6 +13,8 @@ const POLL_INTERVAL_MS = 300;
 /** @type {Map<string, TailSession>} */
 const sessionsByPath = new Map();
 
+const VIEW_TYPE = 'tailGrepViewer';
+
 function activate(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand('tailGrepViewer.open', async (uriArg) => {
@@ -21,6 +23,37 @@ function activate(context) {
         return;
       }
       openOrRevealSession(context, uri.fsPath);
+    })
+  );
+
+  // Lets a panel that was open when the window/editor was closed come back
+  // automatically on the next launch, restored with the same file, line
+  // limit, and filter (persisted via the webview's own setState/getState).
+  context.subscriptions.push(
+    vscode.window.registerWebviewPanelSerializer(VIEW_TYPE, {
+      async deserializeWebviewPanel(webviewPanel, state) {
+        const filePath = state && state.filePath;
+        if (!filePath || !fs.existsSync(filePath)) {
+          webviewPanel.webview.options = { enableScripts: false };
+          webviewPanel.webview.html = `<!DOCTYPE html><html><body style="font-family:var(--vscode-font-family);padding:16px;color:var(--vscode-descriptionForeground);">File no longer available${
+            filePath ? `: <code>${escapeHtml(filePath)}</code>` : ''
+          }.</body></html>`;
+          return;
+        }
+        if (sessionsByPath.has(filePath)) {
+          webviewPanel.dispose();
+          return;
+        }
+        const session = new TailSession(context, filePath, {
+          panel: webviewPanel,
+          lineLimit: state.lineLimit
+        });
+        sessionsByPath.set(filePath, session);
+        session.panel.onDidDispose(() => {
+          session.dispose();
+          sessionsByPath.delete(filePath);
+        });
+      }
     })
   );
 }
@@ -62,26 +95,29 @@ function openOrRevealSession(context, filePath) {
 }
 
 class TailSession {
-  constructor(context, filePath) {
+  constructor(context, filePath, options = {}) {
     this.context = context;
     this.filePath = filePath;
-    this.lineLimit = DEFAULT_LINE_LIMIT;
+    this.lineLimit = normalizeLineLimit(options.lineLimit);
     this.lines = [];
     this.offset = 0;
     this.partial = '';
     this.pollTimer = null;
     this.disposed = false;
 
-    this.panel = vscode.window.createWebviewPanel(
-      'tailGrepViewer',
-      `Tail: ${path.basename(filePath)}`,
-      vscode.ViewColumn.Active,
-      {
-        enableScripts: true,
-        retainContextWhenHidden: true,
-        localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, 'media')]
-      }
-    );
+    const webviewOptions = {
+      enableScripts: true,
+      retainContextWhenHidden: true,
+      localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, 'media')]
+    };
+
+    this.panel =
+      options.panel ||
+      vscode.window.createWebviewPanel(VIEW_TYPE, `Tail: ${path.basename(filePath)}`, vscode.ViewColumn.Active, webviewOptions);
+
+    // Restored panels come back with no options set, so they need to be applied explicitly.
+    this.panel.webview.options = webviewOptions;
+    this.panel.title = `Tail: ${path.basename(filePath)}`;
 
     this.panel.webview.html = this.getHtml();
     this.panel.webview.onDidReceiveMessage((msg) => this.handleMessage(msg));
@@ -197,7 +233,7 @@ class TailSession {
   }
 
   async setLineLimit(value) {
-    const n = Math.max(MIN_LINE_LIMIT, Math.min(MAX_LINE_LIMIT, Math.floor(Number(value)) || DEFAULT_LINE_LIMIT));
+    const n = normalizeLineLimit(value);
     this.lineLimit = n;
     if (this.lines.length > n) {
       this.lines = this.lines.slice(this.lines.length - n);
@@ -283,6 +319,10 @@ function readTailLines(filePath, numLines) {
   } finally {
     fs.closeSync(fd);
   }
+}
+
+function normalizeLineLimit(value) {
+  return Math.max(MIN_LINE_LIMIT, Math.min(MAX_LINE_LIMIT, Math.floor(Number(value)) || DEFAULT_LINE_LIMIT));
 }
 
 function escapeHtml(s) {

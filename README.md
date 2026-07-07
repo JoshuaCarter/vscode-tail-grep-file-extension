@@ -30,6 +30,9 @@ corruption.
   --copytruncate` or `: > file`.
 - **Read-only** — this is a viewer, not an editor, so there's no risk of accidentally
   modifying a live log file.
+- **Remembers itself across reloads** — if a tail view is open when you reload the
+  window or restart the editor, it reopens automatically for the same file with the
+  same line limit, filter text, and regex/case toggles restored.
 
 ## Usage
 
