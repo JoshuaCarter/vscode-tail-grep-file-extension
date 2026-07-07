@@ -15,7 +15,7 @@ const sessionsByPath = new Map();
 
 function activate(context) {
   context.subscriptions.push(
-    vscode.commands.registerCommand('dornTailGrepViewer.open', async (uriArg) => {
+    vscode.commands.registerCommand('tailGrepViewer.open', async (uriArg) => {
       const uri = await resolveTargetUri(uriArg);
       if (!uri) {
         return;
@@ -73,7 +73,7 @@ class TailSession {
     this.disposed = false;
 
     this.panel = vscode.window.createWebviewPanel(
-      'dornTailGrepViewer',
+      'tailGrepViewer',
       `Tail: ${path.basename(filePath)}`,
       vscode.ViewColumn.Active,
       {

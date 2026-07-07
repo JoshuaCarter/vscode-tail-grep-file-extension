@@ -1,21 +1,21 @@
 {
-  "name": "dorn-tail-grep-viewer",
-  "displayName": "Dorn Tail + Grep Viewer",
+  "name": "tail-grep-viewer",
+  "displayName": "Tail + Grep Viewer",
   "description": "Read-only tail -f style viewer with live follow, inline grep-style filtering, and a safe low-level file clear (truncate) command.",
   "version": "0.1.0",
-  "publisher": "dorn",
+  "publisher": "joshuacarter",
   "engines": {
     "vscode": "^1.80.0"
   },
   "categories": ["Other"],
   "activationEvents": [
-    "onCommand:dornTailGrepViewer.open"
+    "onCommand:tailGrepViewer.open"
   ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "dornTailGrepViewer.open",
+        "command": "tailGrepViewer.open",
         "title": "Tail + Grep: Open File",
         "category": "Tail Viewer",
         "icon": "$(eye)"
@@ -24,26 +24,26 @@
     "menus": {
       "explorer/context": [
         {
-          "command": "dornTailGrepViewer.open",
+          "command": "tailGrepViewer.open",
           "when": "!explorerResourceIsFolder",
           "group": "navigation@100"
         }
       ],
       "editor/title/context": [
         {
-          "command": "dornTailGrepViewer.open",
+          "command": "tailGrepViewer.open",
           "group": "navigation@100"
         }
       ],
       "editor/context": [
         {
-          "command": "dornTailGrepViewer.open",
+          "command": "tailGrepViewer.open",
           "group": "navigation@100"
         }
       ],
       "commandPalette": [
         {
-          "command": "dornTailGrepViewer.open"
+          "command": "tailGrepViewer.open"
         }
       ]
     }
