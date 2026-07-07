@@ -101,7 +101,10 @@
       htmlParts.push('<span class="line">' + html + '</span>');
     }
 
-    content.innerHTML = htmlParts.join('\n');
+    // Each .line span is display:block, which already forces a line break;
+    // joining with '\n' here would add a second one since #content is a <pre>
+    // that preserves whitespace, producing a blank line after every entry.
+    content.innerHTML = htmlParts.join('');
 
     const total = rawLines.length;
     statusText.textContent = matcher
