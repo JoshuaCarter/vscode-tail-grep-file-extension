@@ -8,6 +8,7 @@
   const lineLimitInput = document.getElementById('lineLimitInput');
   const clearBtn = document.getElementById('clearBtn');
   const statusText = document.getElementById('statusText');
+  const jumpBar = document.getElementById('jumpBar');
   const jumpBtn = document.getElementById('jumpBtn');
   const scrollArea = document.getElementById('scrollArea');
   const content = document.getElementById('content');
@@ -149,13 +150,13 @@
 
   function scrollToBottom() {
     scrollArea.scrollTop = scrollArea.scrollHeight;
-    jumpBtn.classList.add('hidden');
+    jumpBar.classList.add('hidden');
   }
 
   scrollArea.addEventListener('scroll', () => {
     const atBottom = scrollArea.scrollTop + scrollArea.clientHeight >= scrollArea.scrollHeight - SCROLL_EPS;
     following = atBottom;
-    jumpBtn.classList.toggle('hidden', atBottom);
+    jumpBar.classList.toggle('hidden', atBottom);
   });
 
   jumpBtn.addEventListener('click', () => {

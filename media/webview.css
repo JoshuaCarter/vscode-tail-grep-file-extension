@@ -132,15 +132,24 @@ button.danger:hover {
   flex-shrink: 0;
 }
 
-#jumpBtn.hidden {
-  display: none;
-}
-
 #scrollArea {
   flex: 1;
   overflow-y: auto;
   overflow-x: auto;
   min-height: 0;
+}
+
+#jumpBar {
+  display: flex;
+  justify-content: center;
+  padding: 5px 0;
+  flex-shrink: 0;
+  border-top: 1px solid var(--vscode-panel-border);
+  background: var(--vscode-editor-background);
+}
+
+#jumpBar.hidden {
+  display: none;
 }
 
 #content {
