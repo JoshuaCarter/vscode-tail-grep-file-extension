@@ -125,6 +125,7 @@ class TailSession {
     html = html
       .replace(/__CSS_URI__/g, mediaUri('webview.css'))
       .replace(/__JS_URI__/g, mediaUri('webview.js'))
+      .replace(/__ICON_URI__/g, mediaUri('icon.png'))
       .replace(/__CSP_SOURCE__/g, webview.cspSource)
       .replace(/__NONCE__/g, nonce)
       .replace(/__FILE_PATH__/g, escapeHtml(this.filePath))

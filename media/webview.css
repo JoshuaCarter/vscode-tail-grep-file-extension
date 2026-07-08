@@ -19,6 +19,13 @@ html, body {
   flex-shrink: 0;
 }
 
+#brandIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
 #filterWrap {
   position: relative;
   flex: 1;

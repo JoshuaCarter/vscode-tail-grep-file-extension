@@ -2,12 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src __CSP_SOURCE__ 'unsafe-inline'; script-src 'nonce-__NONCE__';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src __CSP_SOURCE__ 'unsafe-inline'; script-src 'nonce-__NONCE__'; img-src __CSP_SOURCE__ data:;">
 <link rel="stylesheet" href="__CSS_URI__">
+<link rel="icon" href="__ICON_URI__">
 <title>Grail</title>
 </head>
 <body>
   <div id="toolbar">
+    <img id="brandIcon" src="__ICON_URI__" alt="" title="Grail" />
     <div id="filterWrap">
       <input id="filterInput" type="text" placeholder="Filter (grep)... e.g. error, or /pattern/i for regex" />
       <button id="filterClearBtn" class="filterClearBtn hidden" title="Clear filter text">✕</button>

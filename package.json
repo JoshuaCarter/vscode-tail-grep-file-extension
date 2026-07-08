@@ -14,6 +14,7 @@
   },
   "homepage": "https://github.com/JoshuaCarter/vscode-tail-grep-file-extension#readme",
   "keywords": ["log", "tail", "grep", "viewer", "grail"],
+  "icon": "media/icon.png",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -29,7 +30,7 @@
         "command": "tailGrepViewer.open",
         "title": "Grail: Open File",
         "category": "Grail",
-        "icon": "$(eye)"
+        "icon": "media/icon.png"
       }
     ],
     "customEditors": [
