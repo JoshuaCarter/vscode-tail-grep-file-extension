@@ -11,10 +11,27 @@ const MAX_LINE_LIMIT = 200000;
 const CHUNK_SIZE = 64 * 1024;
 const POLL_INTERVAL_MS = 300;
 
-/** @type {Map<string, TailSession>} */
-const sessionsByPath = new Map();
+/** @type {Set<TailSession>} */
+const sessions = new Set();
 
 const VIEW_TYPE = 'tailGrepViewer.view';
+
+function hasGrailForPath(filePath) {
+  for (const session of sessions) {
+    if (session.filePath === filePath && !session.disposed) {
+      return true;
+    }
+  }
+  return false;
+}
+
+async function openInTextEditor(uri) {
+  const doc = await vscode.workspace.openTextDocument(uri);
+  await vscode.window.showTextDocument(doc, {
+    viewColumn: vscode.ViewColumn.Beside,
+    preview: false
+  });
+}
 
 function activate(context) {
   context.subscriptions.push(
@@ -23,29 +40,40 @@ function activate(context) {
       if (!uri) {
         return;
       }
-      // vscode.openWith opens the real file resource with an alternate viewer
-      // (the same mechanism any other custom editor uses), instead of a detached
-      // webview panel that has no resource of its own. That's what makes the
-      // resulting tab draggable elsewhere (e.g. into chat) exactly like the
-      // underlying file would be, and it reveals the existing tab instead of
-      // duplicating it if that file is already open in this viewer.
+      // Custom editors bind to the file URI, so VS Code treats the resource as
+      // already open. If Grail already has this file, open a normal text editor
+      // beside it instead of focusing the existing Grail tab.
+      if (hasGrailForPath(uri.fsPath)) {
+        await openInTextEditor(uri);
+        return;
+      }
       await vscode.commands.executeCommand('vscode.openWith', uri, VIEW_TYPE);
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('tailGrepViewer.openInTextEditor', async (uriArg) => {
+      const uri = await resolveTargetUri(uriArg);
+      if (!uri) {
+        return;
+      }
+      await openInTextEditor(uri);
     })
   );
 
   context.subscriptions.push(
     vscode.window.registerCustomEditorProvider(VIEW_TYPE, new TailEditorProvider(context), {
       webviewOptions: { retainContextWhenHidden: true },
-      supportsMultipleEditorsPerDocument: false
+      supportsMultipleEditorsPerDocument: true
     })
   );
 }
 
 function deactivate() {
-  for (const session of sessionsByPath.values()) {
+  for (const session of sessions) {
     session.dispose();
   }
-  sessionsByPath.clear();
+  sessions.clear();
 }
 
 async function resolveTargetUri(uriArg) {
@@ -79,10 +107,10 @@ class TailEditorProvider {
   async resolveCustomEditor(document, webviewPanel) {
     const filePath = document.uri.fsPath;
     const session = new TailSession(this.context, filePath, { panel: webviewPanel });
-    sessionsByPath.set(filePath, session);
+    sessions.add(session);
     webviewPanel.onDidDispose(() => {
       session.dispose();
-      sessionsByPath.delete(filePath);
+      sessions.delete(session);
     });
   }
 }

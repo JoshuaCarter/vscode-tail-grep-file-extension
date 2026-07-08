@@ -21,6 +21,7 @@
   "categories": ["Other"],
   "activationEvents": [
     "onCommand:tailGrepViewer.open",
+    "onCommand:tailGrepViewer.openInTextEditor",
     "onCustomEditor:tailGrepViewer.view"
   ],
   "main": "./extension.js",
@@ -31,6 +32,11 @@
         "title": "Grail: Open File",
         "category": "Grail",
         "icon": "media/icon.png"
+      },
+      {
+        "command": "tailGrepViewer.openInTextEditor",
+        "title": "Grail: Open in Text Editor",
+        "category": "Grail"
       }
     ],
     "customEditors": [
@@ -51,23 +57,39 @@
           "command": "tailGrepViewer.open",
           "when": "!explorerResourceIsFolder",
           "group": "navigation@100"
+        },
+        {
+          "command": "tailGrepViewer.openInTextEditor",
+          "when": "!explorerResourceIsFolder",
+          "group": "navigation@101"
         }
       ],
       "editor/title/context": [
         {
           "command": "tailGrepViewer.open",
           "group": "navigation@100"
+        },
+        {
+          "command": "tailGrepViewer.openInTextEditor",
+          "group": "navigation@101"
         }
       ],
       "editor/context": [
         {
           "command": "tailGrepViewer.open",
           "group": "navigation@100"
+        },
+        {
+          "command": "tailGrepViewer.openInTextEditor",
+          "group": "navigation@101"
         }
       ],
       "commandPalette": [
         {
           "command": "tailGrepViewer.open"
+        },
+        {
+          "command": "tailGrepViewer.openInTextEditor"
         }
       ]
     }
