@@ -36,18 +36,15 @@ The filter, regex/case toggles, and line limit are remembered per file across re
 
 ## Releases (maintainers)
 
-Pushing a version tag builds a `.vsix` and attaches it to a GitHub Release automatically
-(see `.github/workflows/release.yml`).
+Every push to `main` auto-bumps the patch version, packages a `.vsix`, and publishes a
+GitHub Release (see `.github/workflows/release.yml`). Version bumps are committed back
+with `[skip ci]` so the workflow does not loop.
 
-1. Bump `"version"` in `package.json`.
-2. Commit, then tag and push:
-   ```bash
-   git tag v1.0.0
-   git push origin main --tags
-   ```
-3. The workflow produces `grail-1.0.0.vsix` on the [Releases](https://github.com/JoshuaCarter/vscode-grail-extension/releases) page.
+1. Commit and push to `main` — that's it.
+2. The workflow increments the latest `v*` tag (e.g. `v1.0.0` → `v1.0.1`) and attaches
+   `grail-<version>.vsix` to the [Releases](https://github.com/JoshuaCarter/vscode-grail-extension/releases) page.
 
-You can also trigger a release build manually from the **Actions** tab (**Release** → **Run workflow**).
+You can also trigger a release manually from the **Actions** tab (**Release** → **Run workflow**).
 
 ## Marketplace publish (optional)
 
