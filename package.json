@@ -2,8 +2,18 @@
   "name": "grail",
   "displayName": "Grail (tail & grep)",
   "description": "Grail — read-only tail -f viewer with live follow, inline grep-style filtering, and safe log wipe.",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "publisher": "joshuacarter",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JoshuaCarter/vscode-tail-grep-file-extension"
+  },
+  "bugs": {
+    "url": "https://github.com/JoshuaCarter/vscode-tail-grep-file-extension/issues"
+  },
+  "homepage": "https://github.com/JoshuaCarter/vscode-tail-grep-file-extension#readme",
+  "keywords": ["log", "tail", "grep", "viewer", "grail"],
   "engines": {
     "vscode": "^1.80.0"
   },

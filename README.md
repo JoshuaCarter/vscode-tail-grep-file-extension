@@ -19,10 +19,23 @@ filter, regex/case toggles, and line limit are remembered per file across reload
 
 ## Installation
 
-Copy this folder into your extensions directory, then reload the window:
+**From the marketplace** (VS Code or Cursor): search for **Grail (tail & grep)** by joshuacarter.
 
-- Cursor: `~/.cursor/extensions/`
-- VS Code: `~/.vscode/extensions/`
+**Manual / dev install:** copy this folder into your extensions directory, then reload the window:
+
+- Cursor: `~/.cursor/extensions/joshuacarter.grail-1.0.0/`
+- VS Code: `~/.vscode/extensions/joshuacarter.grail-1.0.0/`
+
+Folder name must be `<publisher>.<name>-<version>` (e.g. `joshuacarter.grail-1.0.0`).
+
+## Publish (maintainers)
+
+```bash
+npm install -g @vscode/vsce
+vsce login joshuacarter
+vsce package    # test: grail-1.0.0.vsix
+vsce publish
+```
 
 ## License
 

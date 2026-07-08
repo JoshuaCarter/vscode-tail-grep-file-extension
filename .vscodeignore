@@ -1,0 +1,9 @@
+.git/**
+.github/**
+.gitignore
+.vscode/**
+.vscode-test/**
+**/*.vsix
+**/*.log
+.DS_Store
+Thumbs.db
