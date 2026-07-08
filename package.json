@@ -2,7 +2,7 @@
   "name": "grail",
   "displayName": "Grail",
   "description": "Grail — read-only tail -f viewer with live follow, inline grep-style filtering, and safe log wipe.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "joshuacarter",
   "license": "MIT",
   "repository": {
@@ -34,7 +34,9 @@
   "engines": {
     "vscode": "^1.80.0"
   },
-  "categories": ["Other"],
+  "categories": [
+    "Other"
+  ],
   "activationEvents": [
     "onCommand:tailGrepViewer.open",
     "onWebviewPanel:tailGrepViewer"
