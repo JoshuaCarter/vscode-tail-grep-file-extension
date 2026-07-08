@@ -1,4 +1,4 @@
-# Grail (tail & grep)
+# Grail (tail and grep)
 
 Tail any file in an editor window, filter lines with ease, wipe the log with a single click.
 
@@ -19,7 +19,7 @@ filter, regex/case toggles, and line limit are remembered per file across reload
 
 ## Installation
 
-**From the marketplace** (VS Code or Cursor): search for **Grail (tail & grep)** by joshuacarter.
+**From the marketplace** (VS Code or Cursor): search for **Grail (tail and grep)** by joshuacarter.
 
 **From GitHub Releases:** download `grail-<version>.vsix`, then in VS Code or Cursor run
 **Extensions: Install from VSIX…** and select the file.
