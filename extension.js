@@ -267,23 +267,16 @@ class TailSession {
 
   async clearFile() {
     try {
-      // Low-level truncate-in-place: a single ftruncate syscall on the existing file handle/inode,
-      // with no read-modify-write step. This avoids delete+recreate races with any process that
-      // still holds the file open for appending, and fsync flushes the new (zero) length to disk
-      // immediately so there is no window where the file is left in a half-written state.
-      const fd = fs.openSync(this.filePath, 'r+');
-      try {
-        fs.ftruncateSync(fd, 0);
-        fs.fsyncSync(fd);
-      } finally {
-        fs.closeSync(fd);
-      }
+      wipeLogFileSafely(this.filePath);
       this.offset = 0;
       this.lines = [];
       this.partial = '';
       this.startLineNumber = 1;
       this.post({ type: 'update', lines: [], startLine: this.startLineNumber });
-      this.post({ type: 'info', message: 'File contents wiped (truncated to 0 bytes).' });
+      this.post({
+        type: 'info',
+        message: 'File wiped (rotated safely; any process still writing keeps the old file).'
+      });
     } catch (err) {
       this.post({ type: 'error', message: `Failed to clear file: ${err.message}` });
     }
@@ -399,6 +392,35 @@ function countFileLines(filePath, existingFd) {
 
 function normalizeLineLimit(value) {
   return Math.max(MIN_LINE_LIMIT, Math.min(MAX_LINE_LIMIT, Math.floor(Number(value)) || DEFAULT_LINE_LIMIT));
+}
+
+// Clears a log file without fighting an active appender. Truncating in place (ftruncate)
+// while another process still has the file open for append is unsafe on Windows: the
+// writer keeps its old byte offset and can write past the new EOF, producing sparse or
+// garbage data that editors then reject as binary. Instead we rotate like logrotate:
+// rename the current file away (the writer's open handle stays on that inode and keeps
+// appending there harmlessly), then create a brand-new empty file at the original path
+// for this viewer and any new openers to use.
+function wipeLogFileSafely(filePath) {
+  const dir = path.dirname(filePath);
+  const base = path.basename(filePath);
+  const rotatedPath = path.join(dir, `${base}.${Date.now()}.wiped`);
+
+  try {
+    fs.renameSync(filePath, rotatedPath);
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      throw err;
+    }
+  }
+
+  fs.writeFileSync(filePath, '');
+
+  // Best-effort cleanup of the rotated backup. This usually fails on Windows while the
+  // original writer still holds the old file open, which is fine — leave it on disk.
+  try {
+    fs.unlinkSync(rotatedPath);
+  } catch (_) {}
 }
 
 function escapeHtml(s) {
