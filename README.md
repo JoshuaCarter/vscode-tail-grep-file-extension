@@ -1,11 +1,10 @@
-# Tail + Grep Viewer
+# Grail (tail & grep)
 
-Makes watching simple log files a joy. Tail any file in an editor window, filter lines
-with ease, wipe the file with a single click.
+Tail any file in an editor window, filter lines with ease, wipe the log with a single click.
 
 ## Usage
 
-1. Right-click a file (Explorer, editor tab, or inside an open file) → **Tail + Grep: Open File**.
+1. Right-click a file (Explorer, editor tab, or inside an open file) → **Grail: Open File**.
 2. Type in the filter bar to narrow down lines — plain text or `/regex/flags`.
 3. Adjust **Lines** to change how many lines are kept.
 4. Click **Wipe File Contents** to clear the log. Tries ReplaceFile / delete-on-close /

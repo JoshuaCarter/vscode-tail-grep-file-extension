@@ -58,7 +58,7 @@ async function resolveTargetUri(uriArg) {
   }
   const picked = await vscode.window.showOpenDialog({
     canSelectMany: false,
-    openLabel: 'Open in Tail + Grep Viewer'
+    openLabel: 'Open in Grail'
   });
   return picked && picked[0];
 }
